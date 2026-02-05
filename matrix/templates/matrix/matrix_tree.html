@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .tree-wrapper { text-align: center; padding: 40px; background: #f9fbfd; min-height: 80vh; }
+    .avatar-circle {
+        width: 60px; height: 60px; border-radius: 50%;
+        margin: 0 auto 10px; display: flex; align-items: center;
+        justify-content: center; font-weight: bold; font-size: 1.2rem;
+        color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .user-node { display: inline-block; width: 120px; transition: transform 0.2s; }
+    .user-node:hover { transform: translateY(-5px); }
+    
+    /* Colors for levels */
+    .color-me { background: #4a90e2; border: 3px solid #fff; }
+    .color-l1 { background: #2ecc71; }
+    .color-l2 { background: #f39c12; }
+    .color-empty { background: #dfe6e9; color: #b2bec3; border: 2px dashed #b2bec3; }
+
+    .tree-row { display: flex; justify-content: center; gap: 40px; margin-top: 40px; position: relative; }
+</style>
+    <div class="tree-header" style="text-align: center; margin-bottom: 20px;">
+        {# We check the 'board' parameter from the URL (?board=1) first #}
+        {% with view_board=request.GET.board|default:user.memberprofile.current_board %}
+            <h2 style="color: #2c3e50;">
+                Board {{ view_board }}: 
+                <span style="color: #3182ce;">
+                    {% if view_board == "1" or view_board == 1 %} Starter ($50)
+                    {% elif view_board == "2" or view_board == 2 %} Bronze ($150)
+                    {% elif view_board == "3" or view_board == 3 %} Silver ($400)
+                    {% elif view_board == "4" or view_board == 4 %} Gold ($1100)
+                   {% elif view_board == "5" or view_board == 5 %} Diamond ($3400)
+                    {% endif %}
+                </span>
+            </h2>
+        
+            {# Display a "Completed" badge if viewing an old board #}
+            {% if view_board|add:"0" < user.memberprofile.current_board %}
+               <div style="margin-bottom: 20px;">
+                    <span style="background: #27ae60; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">
+                        PREVIOUS BOARD VIEW
+                    </span>
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <div style="width: 100%; text-align: center; margin-bottom: 20px;">
+        <div class="user-node">
+            <div class="avatar-circle color-me">{{ head.user.username|slice:":1"|upper }}</div>
+            <strong>Me</strong>
+        </div>
+    </div>    
+
+
+    <div class="tree-row">
+        <div class="user-node">
+            <div class="avatar-circle {% if l1_left %}color-l1{% else %}color-empty{% endif %}">
+                {% if l1_left %}{{ l1_left.user.username|slice:":1"|upper }}{% else %}?{% endif %}
+            </div>
+            <small>{{ l1_left.user.username|default:"Available" }}</small>
+        </div>
+        <div class="user-node">
+            <div class="avatar-circle {% if l1_right %}color-l1{% else %}color-empty{% endif %}">
+                {% if l1_right %}{{ l1_right.user.username|slice:":1"|upper }}{% else %}?{% endif %}
+            </div>
+            <small>{{ l1_right.user.username|default:"Available" }}</small>
+        </div>
+    </div>
+
+    <div class="tree-row" style="gap: 15px;">
+        <div class="user-node">
+            <div class="avatar-circle {% if l2_ll %}color-l2{% else %}color-empty{% endif %}">
+                {% if l2_ll %}{{ l2_ll.user.username|slice:":1"|upper }}{% else %}?{% endif %}
+            </div>
+            <small>{{ l2_ll.user.username|default:"Available" }}</small>
+        </div>
+
+        <div class="user-node">
+            <div class="avatar-circle {% if l2_lr %}color-l2{% else %}color-empty{% endif %}">
+                {% if l2_lr %}{{ l2_lr.user.username|slice:":1"|upper }}{% else %}?{% endif %}
+            </div>
+            <small>{{ l2_lr.user.username|default:"Available" }}</small>
+        </div>
+
+        <div class="user-node">
+            <div class="avatar-circle {% if l2_rl %}color-l2{% else %}color-empty{% endif %}">
+                {% if l2_rl %}{{ l2_rl.user.username|slice:":1"|upper }}{% else %}?{% endif %}
+            </div>
+            <small>{{ l2_rl.user.username|default:"Available" }}</small>
+        </div>
+
+        <div class="user-node">
+            <div class="avatar-circle {% if l2_rr %}color-l2{% else %}color-empty{% endif %}">
+                {% if l2_rr %}{{ l2_rr.user.username|slice:":1"|upper }}{% else %}?{% endif %}
+            </div>
+            <small>{{ l2_rr.user.username|default:"Available" }}</small>
+        </div>
+    </div>
+</div>
+{% endblock %}

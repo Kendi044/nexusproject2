@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NFG Admin - Platform Revenue</title>
+    <style>
+     :root { 
+        --primary: #1a252f; 
+        --accent: #f39c12; 
+        --success: #27ae60; 
+        --light: #f4f7f6; 
+     }
+
+     body { 
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        background: var(--light); 
+        margin: 0; 
+        padding: 40px; /* Default desktop padding */
+        box-sizing: border-box;
+     }
+
+     .header { 
+        margin-bottom: 30px; 
+        border-bottom: 2px solid #ddd; 
+        padding-bottom: 20px; 
+     }
+
+     .header h1 {
+        margin: 0;
+        font-size: 1.8rem;
+        color: var(--primary);
+     }
+
+    /* Grid: minmax(300px) is great, but 1fr handles the scaling */
+     .admin-grid { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+        gap: 20px; 
+     }
+
+     .stat-card { 
+        background: white; 
+        padding: 25px; 
+        border-radius: 15px; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+        border-top: 5px solid var(--accent); 
+        transition: transform 0.2s ease;
+     }
+
+     .stat-card h3 { 
+        color: #7f8c8d; 
+        margin: 0; 
+        text-transform: uppercase; 
+        font-size: 0.75rem; 
+        letter-spacing: 1px;
+     }
+
+     .stat-card .value { 
+        font-size: 2.2rem; 
+        font-weight: bold; 
+        color: var(--primary); 
+        margin: 10px 0; 
+     }
+
+     .status-badge { 
+        display: inline-block; 
+        padding: 6px 14px; 
+        background: var(--success); 
+        color: white; 
+        border-radius: 20px; 
+        font-size: 0.75rem; 
+        font-weight: 600;
+     }
+
+    /* --- MOBILE ADJUSTMENTS --- */
+     @media (max-width: 600px) {
+        body { 
+            padding: 20px 15px; /* Less padding on phones to save space */
+        }
+
+        .header h1 {
+            font-size: 1.4rem;
+            text-align: center;
+        }
+
+        .stat-card {
+            padding: 20px;
+        }
+
+        .stat-card .value {
+            font-size: 1.8rem; /* Slightly smaller text for mobile screens */
+        }
+        
+        /* Ensures cards stack perfectly on very narrow phones */
+        .admin-grid {
+            grid-template-columns: 1fr;
+        }
+     }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>NFG Global System Administration</h1>
+        <p>Real-time platform revenue and member activity tracking.</p>
+    </div>
+
+    <div class="admin-grid">
+        <div class="stat-card">
+            <h3>Total Platform Profit</h3>
+            <div class="value" id="profit">$0.00</div>
+            <div class="status-badge">System Healthy</div>
+        </div>
+
+        <div class="stat-card" style="border-top-color: #3498db;">
+            <h3>Active Paid Members</h3>
+            <div class="value" id="members">0</div>
+            <p>Users who completed the $55 entry.</p>
+        </div>
+
+        <div class="stat-card" style="border-top-color: var(--success);">
+            <h3>Board Revenue Split</h3>
+            <p>B1 Fees: <strong id="b1-fees">$0.00</strong></p>
+            <p>B2 Fees: <strong id="b2-fees">$0.00</strong></p>
+            <p>B3 Fees: <strong id="b3-fees">$0.00</strong></p>
+            <p>B4 Fees: <strong id="b4-fees">$0.00</strong></p>
+            <p>B5 Fees: <strong id="b5-fees">$0.00</strong></p>
+        </div>
+    </div>
+
+    <script>
+        // Fetch real data from the API view we created earlier
+        async function loadStats() {
+            const response = await fetch('/admin-summary-data/');
+            const data = await response.json();
+            
+            document.getElementById('profit').innerText = `$${data.platform_profit}`;
+            document.getElementById('members').innerText = data.active_members;
+            document.getElementById('b1-fees').innerText = `$${data.board_1_rev}`;
+            document.getElementById('b2-fees').innerText = `$${data.board_2_rev}`;
+            document.getElementById('b3-fees').innerText = `$${data.board_3_rev}`;
+            document.getElementById('b4-fees').innerText = `$${data.board_4_rev}`;
+            document.getElementById('b5-fees').innerText = `$${data.board_5_rev}`;
+        }
+
+        // Load immediately and refresh every 60 seconds
+        loadStats();
+        setInterval(loadStats, 60000);
+    </script>
+</body>
+</html>
+{% endblock %}

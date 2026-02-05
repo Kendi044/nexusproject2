@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width: 600px; margin: 50px auto; padding: 30px; background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); text-align: center;">
+    <h2 style="color: #2c3e50;">Final Step: Activate Your Account</h2>
+    <p style="color: #7f8c8d;">Your registration is complete, but your account is <strong>Inactive</strong>. To join the matrix and start earning, please pay the entry fee.</p>
+
+    <div style="background: #fdf2f2; border: 1px solid #feb2b2; padding: 20px; border-radius: 8px; margin: 25px 0;">
+        <h3 style="margin: 0; color: #c53030;">Entry Fee: ${{ fee_amount }}</h3>
+        <p style="margin: 10px 0 0 0; font-size: 0.9em;">Payment ID: <strong>{{ profile.ref_id }}</strong></p>
+    </div>
+
+    <div style="text-align: left; background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h4 style="margin-top: 0;">How to Pay:</h4>
+        <ol>
+            <li>Send exactly <strong>${{ fee_amount }}</strong> to the wallet address below.</li>
+            <li><b>ENSURE YOU USE USDT TRC20</b></li>
+            <li><strong>Wallet Address:</strong> <code>TJHgZSUt1LcJSSu14z9kpfsBFpS2BPyoC9</code></li>
+            <li>Paste your <b>Transaction ID (TxID)</b> and submit.</li>
+        </ol>
+    </div>
+
+    <form action="{% url 'submit_hash' %}" method="POST">
+        {% csrf_token %}
+        <div style="text-align: left; margin-bottom: 20px;">
+            <label for="txid" style="display: block; margin-bottom: 8px; font-weight: bold;">Paste your Crypto Transaction ID (TxID):</label>
+            <input type="text" name="transaction_hash" id="txid" placeholder="e.g. 7f89b... (64 characters)" required 
+                   style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;">
+        </div>
+
+        <button type="submit" style="background: #3182ce; color: white; padding: 15px 30px; border: none; border-radius: 6px; font-size: 1.1em; font-weight: bold; cursor: pointer; width: 100%;">
+            I Have Made the Payment
+        </button>
+    </form>
+</div>
+{% endblock %}

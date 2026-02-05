@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="registration-container" style="max-width: 400px; margin: 0 auto; padding: 20px;">
+    <form method="POST">
+        {% csrf_token %}
+        
+        <h2 style="text-align: center;">Register for Nexus Fund</h2>
+
+        {% if form.errors or messages %}
+            <div class="alert alert-danger" style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                {% if form.non_field_errors %}
+                    {{ form.non_field_errors }}
+                {% endif %}
+                {% for field in form %}
+                    {% if field.errors %}
+                        <strong>{{ field.label }}:</strong> {{ field.errors|striptags }}<br>
+                    {% endif %}
+                {% endfor %}
+                {% for message in messages %}
+                    <strong>Warning:</strong> {{ message }}<br>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div style="margin-bottom: 15px;">
+            <input type="text" name="full_name" placeholder="Full Name" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" value="{{ request.POST.full_name|default:'' }}" required>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+             <input type="text" name="username" placeholder="Username" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" value="{{ request.POST.username|default:'' }}" required>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+             <input type="email" name="email" placeholder="Email" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" value="{{ request.POST.email|default:'' }}" required>
+        </div> 
+
+        <div style="margin-bottom: 15px;">
+             <input type="password" name="password" placeholder="Password" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" value="{{ request.POST.password|default:'' }}" required> 
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+             <input type="password" name="confirm_password" placeholder="Confirm Password" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" value="{{ request.POST.confirm_password|default:'' }}" required>
+        </div>
+
+        <div style="margin-bottom: 15px; background: #f9f9f9; padding: 10px; border-radius: 5px; border: 1px solid #eee;">
+            <label style="font-size: 0.8rem; color: #666;">Referral Code</label>
+            <input type="text" name="ref_id" value="{{ ref_id }}" placeholder="Referral Id" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px;">
+            
+            {% if ref_id %}
+                <p style="color: green; font-size: 0.8rem; margin-top: 5px;">
+                    ✅ You are joining under: <strong>{{ ref_id }}</strong>
+                </p>
+            {% else %}
+                <p style="color: #666; font-size: 0.8rem; margin-top: 5px;">
+                    (No referral code detected)
+                </p>
+            {% endif %}
+        </div>
+
+        <button type="submit" style="width: 100%; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 1rem;">
+            Sign Up & Enter Board
+        </button>
+
+        <div style="text-align: center; margin-top: 20px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+            <p style="color: #64748b; font-size: 0.9rem;">
+                Already have an account? 
+                <a href="{% url 'login' %}" style="color: #27ae60; font-weight: bold; text-decoration: none;">
+                    Login here
+                </a>
+            </p>
+        </div>
+    </form>
+</div>
+{% endblock %}

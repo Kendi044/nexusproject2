@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    :root { 
+        --primary: #1a252f; 
+        --accent: #f39c12; 
+        --success: #27ae60; 
+        --danger: #e74c3c;
+        --light: #f4f7f6; 
+    }
+    
+    /* Scoping styles to .admin-body to avoid messing up your Nav bar */
+    .admin-wrap { background: var(--light); padding: 40px; min-height: 100vh; }
+    
+    .stat-card { 
+        background: white; padding: 30px; border-radius: 15px; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 5px solid var(--accent); 
+        margin-bottom: 20px;
+    }
+
+    .wallet-input {
+        border: 1px solid #ccc;
+        padding: 5px;
+        border-radius: 4px;
+        background: #eee;
+        font-family: monospace;
+    }
+
+    .btn-success { background: var(--success); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+    .btn-danger { background: var(--danger); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+</style>
+
+<div class="admin-wrap">
+    <div class="header">
+        <h1>Nexus Fund Global Admin</h1>
+        <p>Payout Management Platform</p>
+    </div>
+
+    <div class="container">
+        <div class="stat-card">
+            <h3>Total Pending Payouts</h3>
+            <div class="value">{{ payouts.count }}</div>
+        </div>
+
+        <table class="table" style="width: 100%; background: white; border-radius: 10px; padding: 10px;">
+            <thead>
+                <tr style="text-align: left; border-bottom: 2px solid #eee;">
+                    <th>User</th>
+                    <th>Amount (USD)</th>
+                    <th>Wallet (USDT TRC20)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payout in payouts %}
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 15px;">{{ payout.user.username }}</td>
+                    <td><strong>${{ payout.amount }}</strong></td>
+                    <td>
+                        <input type="text" class="wallet-input" value="{{ payout.wallet_address }}" id="wallet-{{ payout.id }}" readonly>
+                        <button onclick="copyText('wallet-{{ payout.id }}')">📋</button>
+                    </td>
+                    <td>
+                        <form method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="payout_id" value="{{ payout.id }}">
+                            <button type="submit" name="action" value="mark_paid" class="btn-success">Confirm Paid</button>
+                            <button type="submit" name="action" value="cancel" class="btn-danger">Cancel</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align:center; padding: 20px;">No pending payouts at this time.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function copyText(id) {
+        var copyText = document.getElementById(id);
+        navigator.clipboard.writeText(copyText.value);
+        alert("Wallet Address Copied!");
+    }
+</script>
+{% endblock %}

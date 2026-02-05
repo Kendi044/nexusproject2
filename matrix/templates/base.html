@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Fund Global - Portal</title>
+    <style>
+     :root { 
+        --primary: #2c3e50; 
+        --accent: #27ae60; 
+        --dark: #1a252f; 
+        --light: #ecf0f1; 
+        --warning: #f39c12;
+        --danger: #e74c3c;
+     }
+
+     body { 
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        background: var(--light); 
+        margin: 0; 
+        display: flex; 
+        flex-direction: column; /* Allows top bar on mobile */
+     }
+
+    /* --- Sidebar (Desktop) --- */
+     .sidebar { 
+        width: 260px; 
+        background: var(--primary); 
+        height: 100vh; 
+        color: white; 
+        padding: 25px; 
+        position: fixed; 
+        left: 0; top: 0;
+        z-index: 1000;
+        transition: transform 0.3s ease;
+     }
+
+    /* --- Main Content (Desktop) --- */
+     .main-container { 
+        margin-left: 260px; /* Matched to sidebar width */
+        padding: 20px; 
+        width: calc(100% - 260px); 
+        min-height: 100vh;
+        box-sizing: border-box;
+     }
+
+     .nav-item { 
+        padding: 15px 0; 
+        border-bottom: 1px solid #34495e; 
+        cursor: pointer; 
+        color: #bdc3c7; 
+        text-decoration: none;
+        display: block;
+        transition: 0.3s;
+     }
+
+    /* --- Mobile View Adjustments --- */
+     @media (max-width: 768px) {
+        body { display: block; }
+
+        .sidebar {
+            width: 100%;
+            height: auto;
+            position: relative; /* No longer fixed to the side */
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        /* Make nav items sit side-by-side or scrollable on mobile */
+        .nav-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding-bottom: 10px;
+        }
+
+        .nav-item {
+            border-bottom: none;
+            white-space: nowrap;
+            background: #34495e;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .main-container {
+            margin-left: 0;
+            width: 100%;
+            padding: 15px;
+        }
+        
+        .logout-btn {
+            margin-top: 10px !important;
+        }
+     }
+
+    /* Utility Cards */
+     .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+    </style>
+
+    <body>
+      <div class="sidebar">
+        <h2>NEXUS FUND</h2>
+        
+        <div class="nav-container">
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="nav-item">Dashboard</a>
+                <a href="{% url 'airdrops' %}" class="nav-item">NFG Airdrops</a>
+                <a href="{% url 'withdrawals' %}" class="nav-item">Withdrawals</a>
+                <a href="{% url 'profile' %}" class="nav-item">Profile</a>
+                
+                <form action="{% url 'logout' %}" method="post" class="logout-btn">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-item" style="background:none; border:none; color: var(--danger); font-size: 0.9rem; cursor:pointer;">
+                        Logout
+                    </button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-item">Login</a>
+                <a href="{% url 'register' %}" class="nav-item">Register</a>
+            {% endif %}
+        </div>
+      </div>
+
+      <div class="main-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div style="padding: 12px; margin-bottom: 20px; border-radius: 8px; background: #d4edda; color: #155724; font-size: 0.9rem;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+      </div>
+    </body>
+</html>

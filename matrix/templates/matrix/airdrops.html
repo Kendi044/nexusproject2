@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+   <div style="background: linear-gradient(135deg, #6e8efb, #a777e3); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h3 style="margin: 0; font-size: 0.9rem; text-transform: uppercase; opacity: 0.8;">NFG Airdrop Balance</h3>
+                <p style="margin: 5px 0 0; font-size: 2rem; font-weight: bold;">
+                    {{ profile.nfg_balance }} <span style="font-size: 1rem;">NFG</span>
+                </p>
+            </div>
+            <div style="background: rgba(255,255,255,0.2); padding: 10px; border-radius: 50%;">
+                <svg width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 16a6 6 0 0 0 6-6c0-1.65-1.35-3-3-3s-3 1.35-3 3 1.35 3 3 3c.337 0 .658-.056.958-.158L8 16z"/>
+                    <path d="M14 6a5.97 5.97 0 0 1-1.33 3.76 5 5 0 1 0-8.67-4.42A5.99 5.99 0 0 1 8 0c1.84 0 3.48.83 4.58 2.14A3 3 0 0 1 14 6z"/>
+                </svg>
+            </div>
+        </div>
+        <div style="margin-top: 15px; font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px;">
+            <span style="background: rgba(255,255,255,0.3); padding: 2px 8px; border-radius: 10px;">
+                Next Reward: Board {{ level|add:1 }} completion
+            </span>
+        </div>
+   </div>
+{% endblock %}

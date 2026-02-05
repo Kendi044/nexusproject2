@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 50px auto; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+    <h2 style="text-align: center; color: #2c3e50;">Complete Payment</h2>
+    <p style="text-align: center; color: #7f8c8d;">Send exactly <strong>$55.00 USDT</strong> via TRC20 network.</p>
+
+    <div style="background: #f8fafc; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0; margin: 20px 0;">
+        <label style="font-size: 0.8rem; color: #64748b; font-weight: bold;">USDT ADDRESS (TRC20)</label>
+        <div style="display: flex; align-items: center; margin-top: 5px;">
+            <code id="walletAddr" style="flex-grow: 1; background: #fff; padding: 10px; border-radius: 5px; border: 1px solid #cbd5e1;">TYourTRC20WalletAddressHere...</code>
+        </div>
+    </div>
+
+    <form action="{% url 'submit_hash' %}" method="POST">
+        {% csrf_token %}
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #2c3e50;">Transaction Hash (TXID)</label>
+            <input type="text" name="transaction_hash" required placeholder="Paste your transaction hash here" 
+                   style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box;">
+            <small style="color: #94a3b8;">Example: 4b2f...8a9c</small>
+        </div>
+
+        <button type="submit" style="width: 100%; padding: 15px; background: #27ae60; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem;">
+            SUBMIT FOR VERIFICATION
+        </button>
+    </form>
+    
+    <a href="{% url 'dashboard' %}" style="display: block; text-align: center; margin-top: 15px; color: #64748b; text-decoration: none; font-size: 0.9rem;">← Back to Dashboard</a>
+</div>
+{% endblock %}
